@@ -408,7 +408,7 @@
         <div class="legend-list" id="pieLegend"></div>
       </div>
       <div class="chart-box">
-        <h3>Últimos 6 meses — ingresos vs gastos</h3>
+        <h3>Ingresos vs gastos por mes</h3>
         <canvas id="barChart" height="220"></canvas>
       </div>
     </div>
@@ -962,17 +962,12 @@
           return `<div class="legend-item"><span class="l"><span class="dot" style="background:${colors[i]}"></span>${labels[i]}</span><span>${fmt(dataVals[i])} · ${pct}%</span></div>`;
         }).join('');
 
-    // Bar: ultimos 6 meses
-    const months = [];
-    const [yy,mm] = monthVal.split('-').map(Number);
-    for(let i=5;i>=0;i--){
-      const d = new Date(yy, mm-1-i, 1);
-      months.push(`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`);
-    }
+    // Bar: desde el mes de la primera transacción hasta el mes actual
+    const months = monthsSinceFirstTransaction();
     const mesesLabels = months.map(m=>{
       const [y,mo] = m.split('-');
       const nombres = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
-      return nombres[parseInt(mo,10)-1];
+      return `${nombres[parseInt(mo,10)-1]} ${y.slice(2)}`;
     });
     const ingresoSeries = months.map(m => state.transactions.filter(t=>t.type==='ingreso' && t.date.startsWith(m)).reduce((a,t)=>a+t.amount,0));
     const gastoSeries = months.map(m => state.transactions.filter(t=>t.type==='gasto' && t.date.startsWith(m)).reduce((a,t)=>a+t.amount,0));
@@ -1166,12 +1161,31 @@
     return [...set].sort();
   }
 
+  // Genera el rango continuo de meses desde el mes de la primera transacción
+  // registrada hasta el mes actual (incluyendo meses sin movimientos en el medio).
+  function monthsSinceFirstTransaction(){
+    if(state.transactions.length===0) return monthsBack(6);
+    const firstMonthKey = state.transactions.reduce((min,t)=>{
+      const k = t.date.slice(0,7);
+      return k < min ? k : min;
+    }, state.transactions[0].date.slice(0,7));
+    const [fy, fm] = firstMonthKey.split('-').map(Number);
+    const now = new Date();
+    const months = [];
+    let y = fy, m = fm;
+    while(y < now.getFullYear() || (y===now.getFullYear() && m <= now.getMonth()+1)){
+      months.push(`${y}-${String(m).padStart(2,'0')}`);
+      m++;
+      if(m>12){ m=1; y++; }
+    }
+    return months;
+  }
+
   function renderAnalisis(){
     const rango = analisisRango.value;
     let months;
     if(rango==='all'){
-      months = allMonthsWithData();
-      if(months.length===0) months = monthsBack(6);
+      months = monthsSinceFirstTransaction();
     } else {
       months = monthsBack(parseInt(rango,10));
     }
