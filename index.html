@@ -587,6 +587,10 @@
 
     <div id="syncAuthBox">
       <div class="form-grid">
+        <div class="field" style="grid-column:span 2;">
+          <label for="syncName">Nombre (solo para crear cuenta)</label>
+          <input type="text" id="syncName" placeholder="¿Cómo quieres que te llamemos?">
+        </div>
         <div class="field">
           <label for="syncEmail">Correo</label>
           <input type="email" id="syncEmail" placeholder="tucorreo@ejemplo.com">
@@ -1419,26 +1423,51 @@
     }
   }
 
+  function getGreeting(){
+    const h = new Date().getHours();
+    if(h < 12) return 'Buenos días';
+    if(h < 19) return 'Buenas tardes';
+    return 'Buenas noches';
+  }
+
+  function getDisplayName(user){
+    if(!user) return '';
+    const fullName = user.user_metadata && user.user_metadata.full_name;
+    if(fullName) return fullName.split(' ')[0];
+    return user.email ? user.email.split('@')[0] : '';
+  }
+
+  const DEFAULT_HERO_SUB = 'Tus ingresos y gastos, en un solo lugar — claro, al instante y en todos tus dispositivos.';
+
   function updateSyncUI(){
     const authBox = document.getElementById('syncAuthBox');
     const loggedBox = document.getElementById('syncLoggedBox');
+    const heroSub = document.querySelector('.hero-sub');
     if(sbUser){
       authBox.style.display = 'none';
       loggedBox.style.display = 'block';
-      document.getElementById('syncUserEmail').textContent = sbUser.email;
+      const name = getDisplayName(sbUser);
+      document.getElementById('syncUserEmail').textContent = name ? `${name} (${sbUser.email})` : sbUser.email;
+      if(heroSub) heroSub.textContent = `${getGreeting()}, ${name} — así va tu dinero hoy.`;
     } else {
       authBox.style.display = 'block';
       loggedBox.style.display = 'none';
+      if(heroSub) heroSub.textContent = DEFAULT_HERO_SUB;
     }
   }
 
   document.getElementById('btnSyncRegister').addEventListener('click', async ()=>{
     if(!sbConfigured()) return;
+    const name = document.getElementById('syncName').value.trim();
     const email = document.getElementById('syncEmail').value.trim();
     const pass = document.getElementById('syncPassword').value;
     const statusEl = document.getElementById('syncStatus');
     if(!email || pass.length<6){ statusEl.textContent = 'Escribe un correo y una contraseña de al menos 6 caracteres.'; return; }
-    const { error } = await sb.auth.signUp({ email, password: pass });
+    const { error } = await sb.auth.signUp({
+      email,
+      password: pass,
+      options: { data: { full_name: name || null } }
+    });
     statusEl.textContent = error ? ('Error: ' + error.message) : 'Cuenta creada. Si tu proyecto pide confirmación por correo, revisa tu bandeja antes de iniciar sesión.';
   });
 
