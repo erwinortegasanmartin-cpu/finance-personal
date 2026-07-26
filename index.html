@@ -137,30 +137,56 @@
   }
   .wallet-card.neg .wallet-amt{color:#FFC9BC;}
 
-  /* ---------- TABS ---------- */
-  nav.tabs{
-    display:flex; gap:6px; margin:88px 0 20px 0; flex-wrap:wrap;
-    background:#fff; padding:6px; border-radius:16px; box-shadow: var(--shadow);
-    width:fit-content;
+  /* ---------- LAYOUT: SIDEBAR + CONTENT ---------- */
+  .app-layout{
+    display:flex; align-items:flex-start; gap:24px;
+    margin-top:88px;
   }
-  nav.tabs button{
+  .content-area{flex:1; min-width:0;}
+
+  nav.tabs.side-nav{
+    display:flex; flex-direction:column; gap:3px;
+    background:#fff; padding:10px; border-radius:18px; box-shadow: var(--shadow);
+    width:216px; flex-shrink:0;
+    position:sticky; top:20px;
+  }
+  nav.tabs.side-nav button{
+    display:flex; align-items:center; gap:11px;
     font-family:'Inter', sans-serif;
     font-weight:600;
-    font-size:13px;
+    font-size:13.5px;
     background:transparent;
     border:none;
     color:var(--ink-soft);
-    padding:10px 18px;
+    padding:11px 13px;
     cursor:pointer;
-    border-radius:11px;
+    border-radius:12px;
+    text-align:left;
+    width:100%;
     transition: background .15s ease, color .15s ease;
   }
-  nav.tabs button:hover{color:var(--ink); background:var(--paper-2);}
-  nav.tabs button.active{
+  nav.tabs.side-nav .nav-icon{font-size:16px; width:20px; text-align:center; flex-shrink:0;}
+  nav.tabs.side-nav button:hover{color:var(--ink); background:var(--paper-2);}
+  nav.tabs.side-nav button.active{
     background: linear-gradient(135deg, var(--gold), #7B4FE0);
     color:#fff;
     box-shadow: 0 6px 14px -4px rgba(91,79,233,0.5);
   }
+
+  .menu-toggle{
+    display:none;
+    background:#fff; border:none; border-radius:10px;
+    width:38px; height:38px; font-size:17px; cursor:pointer;
+    color:var(--ink); margin-bottom:14px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+  }
+  .nav-overlay{
+    display:none;
+    position:fixed; inset:0; background:rgba(20,19,58,0.5);
+    z-index:60;
+  }
+  .nav-overlay.show{display:block;}
+
   .panel{
     background:var(--card);
     border:1px solid var(--line);
@@ -333,13 +359,23 @@
   #tab-sync .form-grid{max-width:420px;}
 
   /* ---------- MOBILE ---------- */
+  @media (max-width:900px){
+    .app-layout{margin-top:20px;}
+    .menu-toggle{display:inline-flex; align-items:center; justify-content:center;}
+    nav.tabs.side-nav{
+      position:fixed; top:0; left:0; height:100vh; width:250px;
+      border-radius:0 20px 20px 0;
+      transform:translateX(-110%);
+      transition:transform .25s ease;
+      z-index:70; padding-top:90px;
+    }
+    nav.tabs.side-nav.open{transform:translateX(0);}
+  }
   @media (max-width:640px){
     .wrap{padding:0 14px;}
     header.hero{padding:30px 0 70px 0;}
     .wallet-card{max-width:100%; margin:28px 0 -56px 0; padding:20px 20px;}
     .panel{padding:18px;}
-    nav.tabs{flex-wrap:nowrap; overflow-x:auto; -webkit-overflow-scrolling:touch; touch-action:pan-x; margin:76px 0 0 0; padding-bottom:2px; width:100%; max-width:100%;}
-    nav.tabs button{padding:10px 14px; white-space:nowrap; flex-shrink:0;}
     .form-grid{grid-template-columns:1fr;}
     .kpi-row{grid-template-columns:1fr 1fr;}
     .cat-grid, .goal-grid{grid-template-columns:1fr;}
@@ -352,6 +388,7 @@
 
 <header class="hero">
   <div class="wrap hero-inner">
+    <button class="menu-toggle" id="menuToggle" aria-label="Abrir menú" style="display:none;">☰</button>
     <div class="hero-eyebrow"><span class="dotpulse"></span> Sincronizado en la nube</div>
     <h1 class="hero-title">Finance Personal</h1>
     <p class="hero-sub">Tus ingresos y gastos, en un solo lugar — claro, al instante y en todos tus dispositivos.</p>
@@ -368,21 +405,24 @@
 </header>
 
 <div class="wrap">
-  <nav class="tabs" id="mainNav" style="display:none;">
-    <button data-tab="resumen" class="active">Resumen</button>
-    <button data-tab="analisis">Análisis</button>
-    <button data-tab="transacciones">Transacciones</button>
-    <button data-tab="categorias">Categorías</button>
-    <button data-tab="presupuestos">Presupuestos</button>
-    <button data-tab="metas">Metas de ahorro</button>
-    <button data-tab="sync">Sincronización</button>
-  </nav>
+  <div class="app-layout">
+    <div class="nav-overlay" id="navOverlay"></div>
+    <nav class="tabs side-nav" id="mainNav" style="display:none;">
+      <button data-tab="resumen" class="active"><span class="nav-icon">📊</span><span>Resumen</span></button>
+      <button data-tab="analisis"><span class="nav-icon">📈</span><span>Análisis</span></button>
+      <button data-tab="transacciones"><span class="nav-icon">💳</span><span>Transacciones</span></button>
+      <button data-tab="categorias"><span class="nav-icon">🏷️</span><span>Categorías</span></button>
+      <button data-tab="presupuestos"><span class="nav-icon">🎯</span><span>Presupuestos</span></button>
+      <button data-tab="metas"><span class="nav-icon">🐷</span><span>Metas de ahorro</span></button>
+      <button data-tab="sync"><span class="nav-icon">🔄</span><span>Sincronización</span></button>
+    </nav>
 
-  <!-- RESUMEN -->
-  <section class="panel" id="tab-resumen" style="display:none;">
-    <div class="sync-notice" id="chartLibWarning" style="display:none; border-color:var(--rust);">
-      <strong>Los gráficos no pudieron cargar.</strong> Esto suele pasar por falta de conexión a internet en el momento de abrir la app, o porque algo (un bloqueador de anuncios, un firewall) impidió descargar la librería de gráficos. Verifica tu conexión y recarga la página; el resto de la información (montos, listas, totales) sigue funcionando con normalidad mientras tanto.
-    </div>
+    <div class="content-area">
+    <!-- RESUMEN -->
+    <section class="panel" id="tab-resumen" style="display:none;">
+      <div class="sync-notice" id="chartLibWarning" style="display:none; border-color:var(--rust);">
+        <strong>Los gráficos no pudieron cargar.</strong> Esto suele pasar por falta de conexión a internet en el momento de abrir la app, o porque algo (un bloqueador de anuncios, un firewall) impidió descargar la librería de gráficos. Verifica tu conexión y recarga la página; el resto de la información (montos, listas, totales) sigue funcionando con normalidad mientras tanto.
+      </div>
     <div class="top-row">
       <div>
         <h2>Resumen del mes</h2>
@@ -611,9 +651,14 @@
 
     <div id="syncLoggedBox" style="display:none;">
       <p class="hint"><span class="sync-status-dot on"></span>Conectado como <strong id="syncUserEmail"></strong>. Tus datos se sincronizan en tiempo real con todos tus dispositivos.</p>
-      <button class="btn secondary" id="btnSyncLogout">Cerrar sesión</button>
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <button class="btn secondary" id="btnEditName">Editar nombre</button>
+        <button class="btn secondary" id="btnSyncLogout">Cerrar sesión</button>
+      </div>
     </div>
-  </section>
+    </section>
+    </div>
+  </div>
 
   <footer class="credit">FINANCE PERSONAL · registro guardado automáticamente y sincronizado en la nube</footer>
 </div>
@@ -721,8 +766,21 @@
       if(btn.dataset.tab==='analisis') renderAnalisis();
       if(btn.dataset.tab==='presupuestos') renderBudgets();
       if(btn.dataset.tab==='metas') renderGoals();
+      closeSideNav();
     });
   });
+
+  // ---------- MENÚ LATERAL EN MÓVIL ----------
+  function openSideNav(){
+    document.getElementById('mainNav').classList.add('open');
+    document.getElementById('navOverlay').classList.add('show');
+  }
+  function closeSideNav(){
+    document.getElementById('mainNav').classList.remove('open');
+    document.getElementById('navOverlay').classList.remove('show');
+  }
+  document.getElementById('menuToggle').addEventListener('click', openSideNav);
+  document.getElementById('navOverlay').addEventListener('click', closeSideNav);
 
   // ---------- TX TYPE TOGGLE ----------
   document.getElementById('btnIngreso').addEventListener('click', ()=>setTxType('ingreso'));
@@ -1320,14 +1378,17 @@
 
   function setAppLocked(locked){
     const nav = document.getElementById('mainNav');
+    const menuToggle = document.getElementById('menuToggle');
     if(locked){
       nav.style.display = 'none';
+      menuToggle.style.display = 'none';
       ALL_TABS.forEach(t=>{
         document.getElementById('tab-'+t).style.display = (t==='sync') ? 'block' : 'none';
       });
       document.querySelectorAll('nav.tabs button').forEach(b=>b.classList.remove('active'));
     } else {
       nav.style.display = 'flex';
+      menuToggle.style.display = '';
       const alreadyVisibleTab = ALL_TABS.find(t => document.getElementById('tab-'+t).style.display === 'block' && t !== 'sync');
       const targetTab = alreadyVisibleTab || 'resumen';
       document.querySelectorAll('nav.tabs button').forEach(b=>{
@@ -1482,6 +1543,22 @@
 
   document.getElementById('btnSyncLogout').addEventListener('click', async ()=>{
     if(sb) await sb.auth.signOut();
+  });
+
+  document.getElementById('btnEditName').addEventListener('click', async ()=>{
+    if(!sb || !sbUser) return;
+    const current = getDisplayName(sbUser);
+    const newName = prompt('¿Cómo quieres que te llamemos?', current || '');
+    if(newName === null) return;
+    const trimmed = newName.trim();
+    if(!trimmed) return;
+    const { data, error } = await sb.auth.updateUser({ data: { full_name: trimmed } });
+    if(error){
+      alert('No se pudo actualizar el nombre: ' + error.message);
+      return;
+    }
+    if(data && data.user) sbUser = data.user;
+    updateSyncUI();
   });
 
   initSupabase();
