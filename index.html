@@ -1181,13 +1181,24 @@
     return months;
   }
 
+  // Quita del arreglo los meses anteriores a la primera transacción registrada,
+  // para no mostrar meses vacíos "de sobra" antes de que existiera algún movimiento.
+  function clipToFirstTransaction(months){
+    if(state.transactions.length===0) return months;
+    const firstMonthKey = state.transactions.reduce((min,t)=>{
+      const k = t.date.slice(0,7);
+      return k < min ? k : min;
+    }, state.transactions[0].date.slice(0,7));
+    return months.filter(m => m >= firstMonthKey);
+  }
+
   function renderAnalisis(){
     const rango = analisisRango.value;
     let months;
     if(rango==='all'){
       months = monthsSinceFirstTransaction();
     } else {
-      months = monthsBack(parseInt(rango,10));
+      months = clipToFirstTransaction(monthsBack(parseInt(rango,10)));
     }
 
     const nombres = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
