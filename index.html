@@ -113,21 +113,18 @@
     pointer-events:none;
   }
   .wallet-top{display:flex; justify-content:space-between; align-items:flex-start;}
-  .wallet-chip{
-    width:38px; height:28px; border-radius:6px;
-    background: linear-gradient(135deg, #F4D58D, #C9A227);
-    position:relative;
-  }
-  .wallet-chip::after{
-    content:""; position:absolute; inset:4px; border:1px solid rgba(0,0,0,0.18); border-radius:3px;
-  }
+  .wallet-chip-svg{display:block; filter: drop-shadow(0 1px 1px rgba(0,0,0,0.25));}
   .wallet-brand{
     font-family:'Space Grotesk', sans-serif; font-weight:600; font-size:13px;
     letter-spacing:.03em; color:rgba(255,255,255,0.85);
   }
+  .wallet-number{
+    font-family:'JetBrains Mono', monospace; font-size:14px; letter-spacing:.12em;
+    color:rgba(255,255,255,0.82); margin-top:18px; font-variant-numeric: tabular-nums;
+  }
   .wallet-label{
     font-family:'JetBrains Mono', monospace; font-size:10.5px; letter-spacing:.14em;
-    text-transform:uppercase; color:rgba(255,255,255,0.6); margin-top:20px;
+    text-transform:uppercase; color:rgba(255,255,255,0.6); margin-top:14px;
   }
   .wallet-amt{
     font-family:'Space Grotesk', sans-serif; font-weight:700;
@@ -225,6 +222,7 @@
   }
   .type-toggle button.on.ingreso{background:var(--forest); color:#fff;}
   .type-toggle button.on.gasto{background:var(--rust); color:#fff;}
+  .type-toggle button.on.ahorro{background:#0EA5E9; color:#fff;}
 
   .btn{
     font-family:'Inter',sans-serif; font-weight:600; font-size:13.5px;
@@ -257,6 +255,7 @@
   td.amt{font-family:'JetBrains Mono',monospace; text-align:right; font-weight:600; font-variant-numeric: tabular-nums;}
   td.amt.pos{color:var(--forest);}
   td.amt.neg{color:var(--rust);}
+  td.amt.save{color:#0EA5E9;}
   .empty-row td{text-align:center; padding:40px 10px; color:var(--ink-soft); font-style:italic;}
 
   /* ---------- CATEGORIES ---------- */
@@ -295,9 +294,34 @@
   .kpi.gasto .val{color:var(--rust);}
 
   .charts-row{display:grid; grid-template-columns:1fr 1.3fr; gap:24px;}
+  .charts-row-even{grid-template-columns:1fr 1fr;}
   @media (max-width:760px){.charts-row{grid-template-columns:1fr;}}
+
+  .donut-wrap{position:relative; max-width:280px; margin:0 auto;}
+  .donut-center{
+    position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    pointer-events:none; text-align:center;
+  }
+  .donut-center .dc-lbl{
+    font-family:'Inter',sans-serif; font-size:10.5px; text-transform:uppercase;
+    letter-spacing:.06em; color:var(--ink-soft); font-weight:600;
+  }
+  .donut-center .dc-val{
+    font-family:'Space Grotesk',sans-serif; font-size:19px; font-weight:700; color:var(--ink);
+    margin-top:2px;
+  }
+  .chart-box{transition: box-shadow .2s ease, transform .2s ease;}
+  .chart-box:hover{box-shadow: 0 10px 28px -8px rgba(23,24,51,0.14); transform:translateY(-1px);}
   .chart-box{background:var(--paper); border:1.5px solid var(--line); border-radius:14px; padding:16px;}
   .chart-box h3{margin:0 0 12px 0; font-family:'Space Grotesk',sans-serif; font-size:15px; color:var(--forest); font-weight:600;}
+  .chart-box-head{display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:12px; flex-wrap:wrap;}
+  .chart-box-head h3{margin:0;}
+  .mini-select{
+    padding:6px 10px; border:1.5px solid var(--line); border-radius:8px;
+    background:#fff; font-family:'Inter',sans-serif; font-size:12px; font-weight:600;
+    color:var(--ink-soft); cursor:pointer;
+  }
   .month-select{margin-bottom:18px;}
 
   .legend-list{display:flex; flex-direction:column; gap:6px; margin-top:10px;}
@@ -358,6 +382,44 @@
   .sync-status-dot.off{background:var(--rust);}
   #tab-sync .form-grid{max-width:420px;}
 
+  .sync-panel{
+    border:none; box-shadow:none; background:transparent; padding:8px 16px 24px 16px;
+    max-width:460px; margin:0 auto;
+  }
+  .sync-panel #syncLoginForm, .sync-panel #syncRegisterForm, .sync-panel #syncLoggedBox{
+    background:var(--card); border:1.5px solid var(--line); border-radius:20px; padding:24px; box-shadow:var(--shadow);
+  }
+  .form-title{
+    font-family:'Space Grotesk',sans-serif; font-size:19px; font-weight:700; color:var(--ink); margin:0 0 16px 0;
+  }
+
+  .onboard-card{
+    max-width:440px; margin:0 auto;
+    background: linear-gradient(160deg, #1B1946 0%, #4A3FD6 55%, #8A4FE0 100%);
+    border-radius:28px;
+    padding:28px 26px 30px 26px;
+    box-shadow: 0 24px 48px -14px rgba(28,20,90,0.4);
+  }
+  .onboard-illustration-svg{width:100%; height:auto; display:block; margin-bottom:6px;}
+  .onboard-title{
+    font-family:'Space Grotesk',sans-serif; font-size:25px; font-weight:700;
+    text-align:left; color:#ffffff; margin:6px 0 8px 0; letter-spacing:-.01em; line-height:1.2;
+  }
+  .onboard-sub{
+    text-align:left; color:rgba(255,255,255,0.75); font-size:14px; margin:0 0 22px 0; line-height:1.5;
+  }
+  .btn-cta{
+    display:block; width:100%; padding:15px 20px; font-size:15px; border-radius:14px;
+    box-shadow: 0 10px 22px -6px rgba(0,0,0,0.35);
+  }
+  .onboard-login-link{
+    text-align:center; margin:16px 0 0 0; font-size:13.5px; color:rgba(255,255,255,0.65);
+  }
+  .onboard-login-link a{
+    color:#F4D58D; font-weight:700; text-decoration:none; cursor:pointer;
+  }
+  .onboard-login-link a:hover{text-decoration:underline;}
+
   /* ---------- MOBILE ---------- */
   @media (max-width:900px){
     .app-layout{margin-top:20px;}
@@ -389,15 +451,31 @@
 <header class="hero">
   <div class="wrap hero-inner">
     <button class="menu-toggle" id="menuToggle" aria-label="Abrir menú" style="display:none;">☰</button>
-    <div class="hero-eyebrow"><span class="dotpulse"></span> Sincronizado en la nube</div>
+    <div class="hero-eyebrow"><span class="dotpulse"></span> On line</div>
     <h1 class="hero-title">Finance Personal</h1>
     <p class="hero-sub">Tus ingresos y gastos, en un solo lugar — claro, al instante y en todos tus dispositivos.</p>
 
     <div class="wallet-card" id="balanceStamp">
       <div class="wallet-top">
-        <div class="wallet-chip"></div>
+        <svg class="wallet-chip-svg" viewBox="0 0 48 36" width="42" height="32">
+          <defs>
+            <linearGradient id="chipGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#F9E9B8"/>
+              <stop offset="0.45" stop-color="#E8C363"/>
+              <stop offset="1" stop-color="#B8862E"/>
+            </linearGradient>
+          </defs>
+          <rect x="0.5" y="0.5" width="47" height="35" rx="7" fill="url(#chipGrad)" stroke="rgba(120,84,15,0.5)" stroke-width="1"/>
+          <rect x="10" y="7" width="28" height="22" rx="4" fill="none" stroke="rgba(120,84,15,0.55)" stroke-width="1"/>
+          <line x1="16" y1="0" x2="16" y2="36" stroke="rgba(120,84,15,0.45)" stroke-width="1"/>
+          <line x1="32" y1="0" x2="32" y2="36" stroke="rgba(120,84,15,0.45)" stroke-width="1"/>
+          <line x1="0" y1="12" x2="48" y2="12" stroke="rgba(120,84,15,0.45)" stroke-width="1"/>
+          <line x1="0" y1="24" x2="48" y2="24" stroke="rgba(120,84,15,0.45)" stroke-width="1"/>
+          <path d="M10 18 H16 M32 18 H38" stroke="rgba(120,84,15,0.45)" stroke-width="1"/>
+        </svg>
         <div class="wallet-brand">Finance Personal</div>
       </div>
+      <div class="wallet-number">4521 &nbsp; •••• &nbsp; •••• &nbsp; 8890</div>
       <div class="wallet-label">Saldo actual</div>
       <div class="wallet-amt" id="balanceAmt">$0</div>
     </div>
@@ -437,19 +515,27 @@
     <div class="kpi-row">
       <div class="kpi ingreso"><div class="lbl">Ingresos del mes</div><div class="val" id="kpiIngreso">$0</div></div>
       <div class="kpi gasto"><div class="lbl">Gastos del mes</div><div class="val" id="kpiGasto">$0</div></div>
+      <div class="kpi"><div class="lbl">Ahorro del mes</div><div class="val" id="kpiAhorro" style="color:#0EA5E9;">$0</div></div>
       <div class="kpi"><div class="lbl">Balance del mes</div><div class="val" id="kpiBalance">$0</div></div>
       <div class="kpi"><div class="lbl">Gasto fijo vs variable</div><div class="val" id="kpiFijoVar" style="font-size:14px;">—</div></div>
     </div>
 
-    <div class="charts-row">
+    <div class="charts-row charts-row-even">
       <div class="chart-box">
-        <h3>Gastos por categoría</h3>
-        <canvas id="pieChart" height="220"></canvas>
-        <div class="legend-list" id="pieLegend"></div>
+        <h3 style="color:var(--forest);">Ingresos por categoría</h3>
+        <div class="donut-wrap">
+          <canvas id="incomePieChart" height="220"></canvas>
+          <div class="donut-center" id="incomePieCenter"><span class="dc-lbl">Total</span><span class="dc-val">$0</span></div>
+        </div>
+        <div class="legend-list" id="incomePieLegend"></div>
       </div>
       <div class="chart-box">
-        <h3>Ingresos vs gastos por mes</h3>
-        <canvas id="barChart" height="220"></canvas>
+        <h3 style="color:var(--rust);">Gastos por categoría</h3>
+        <div class="donut-wrap">
+          <canvas id="pieChart" height="220"></canvas>
+          <div class="donut-center" id="pieCenter"><span class="dc-lbl">Total</span><span class="dc-val">$0</span></div>
+        </div>
+        <div class="legend-list" id="pieLegend"></div>
       </div>
     </div>
   </section>
@@ -461,18 +547,28 @@
         <h2>Análisis</h2>
         <p class="hint">El comportamiento de tu dinero a lo largo del tiempo y qué categorías mueven más.</p>
       </div>
-      <div class="field" style="min-width:150px;">
-        <label for="analisisRango">Periodo</label>
-        <select id="analisisRango">
-          <option value="6">Últimos 6 meses</option>
-          <option value="12" selected>Últimos 12 meses</option>
-          <option value="all">Todo el historial</option>
-        </select>
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <div class="field" style="min-width:130px;">
+          <label for="analisisVista">Vista</label>
+          <select id="analisisVista">
+            <option value="day">Diaria</option>
+            <option value="week">Semanal</option>
+            <option value="month" selected>Mensual</option>
+          </select>
+        </div>
+        <div class="field" id="analisisRangoField" style="min-width:150px;">
+          <label for="analisisRango">Periodo</label>
+          <select id="analisisRango">
+            <option value="6">Últimos 6 meses</option>
+            <option value="12" selected>Últimos 12 meses</option>
+            <option value="all">Todo el historial</option>
+          </select>
+        </div>
       </div>
     </div>
 
     <div class="chart-box" style="margin-top:6px;">
-      <h3>Tendencia mensual — ingresos vs gastos</h3>
+      <h3 id="trendChartTitle">Tendencia mensual — ingresos vs gastos</h3>
       <canvas id="trendChart" height="180"></canvas>
     </div>
 
@@ -485,6 +581,11 @@
         <h3>Categorías que más mueven — Ingresos</h3>
         <canvas id="topIngresoChart" height="220"></canvas>
       </div>
+    </div>
+
+    <div class="chart-box" style="margin-top:20px;">
+      <h3>Categorías que más mueven — Ahorros</h3>
+      <canvas id="topAhorroChart" height="180"></canvas>
     </div>
   </section>
 
@@ -504,6 +605,7 @@
         <div class="type-toggle">
           <button type="button" id="btnIngreso" class="on ingreso">Ingreso</button>
           <button type="button" id="btnGasto" class="gasto">Gasto</button>
+          <button type="button" id="btnAhorro" class="ahorro">Ahorro</button>
         </div>
       </div>
       <div class="field">
@@ -514,9 +616,13 @@
         <label for="txDate">Fecha</label>
         <input type="date" id="txDate">
       </div>
-      <div class="field">
+      <div class="field" id="txCategoryField">
         <label for="txCategory">Categoría</label>
         <select id="txCategory"></select>
+      </div>
+      <div class="field" id="txGoalField" style="display:none;">
+        <label for="txGoal">Meta de ahorro</label>
+        <select id="txGoal"></select>
       </div>
       <div class="field" style="grid-column:span 2;">
         <label for="txNote">Nota</label>
@@ -526,6 +632,7 @@
         <button class="btn" id="btnAddTx" style="width:100%;">Agregar entrada</button>
       </div>
     </div>
+    <p class="hint" id="txAhorroHint" style="display:none; margin-top:-6px;">Crea primero una meta de ahorro en la pestaña "Metas de ahorro" para poder registrar aportes aquí.</p>
 
     <div class="table-scroll">
       <table class="ledger">
@@ -610,10 +717,7 @@
   </section>
 
   <!-- SINCRONIZACIÓN -->
-  <section class="panel" id="tab-sync">
-    <h2>Sincronización entre dispositivos</h2>
-    <p class="hint">Conecta tu proyecto de Supabase para que el PC y el celular muestren siempre la misma información.</p>
-
+  <section class="panel sync-panel" id="tab-sync">
     <div class="sync-notice" id="syncSetupNotice" style="display:none;">
       <strong>Falta conectar Supabase.</strong> Pasos (una sola vez):
       <ol>
@@ -625,31 +729,155 @@
       </ol>
     </div>
 
-    <div id="syncAuthBox">
-      <div class="form-grid">
-        <div class="field" style="grid-column:span 2;">
-          <label for="syncName">Nombre (solo para crear cuenta)</label>
-          <input type="text" id="syncName" placeholder="¿Cómo quieres que te llamemos?">
-        </div>
-        <div class="field">
-          <label for="syncEmail">Correo</label>
-          <input type="email" id="syncEmail" placeholder="tucorreo@ejemplo.com">
-        </div>
-        <div class="field">
-          <label for="syncPassword">Contraseña</label>
-          <input type="password" id="syncPassword" placeholder="Mínimo 6 caracteres">
-        </div>
-        <div class="field">
-          <button class="btn" id="btnSyncLogin" style="width:100%;">Iniciar sesión</button>
-        </div>
-        <div class="field">
-          <button class="btn secondary" id="btnSyncRegister" style="width:100%;">Crear cuenta</button>
-        </div>
+    <!-- PASO 0: elegir si ya tiene cuenta o es nuevo -->
+    <div id="syncChoice">
+      <div class="onboard-card">
+        <svg class="onboard-illustration-svg" viewBox="0 0 480 300" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="ribbonA" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#8A7CFF"/>
+              <stop offset="1" stop-color="#6A5CF0"/>
+            </linearGradient>
+            <linearGradient id="ribbonB" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#FFFFFF"/>
+              <stop offset="1" stop-color="#EDEBFF"/>
+            </linearGradient>
+            <linearGradient id="billGrad" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" stop-color="#3DDC97"/>
+              <stop offset="1" stop-color="#12B76A"/>
+            </linearGradient>
+            <linearGradient id="ctaCircle" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#5B4FE9"/>
+              <stop offset="1" stop-color="#B24FE0"/>
+            </linearGradient>
+          </defs>
+
+          <circle cx="55" cy="40" r="65" fill="rgba(255,255,255,0.06)"/>
+          <circle cx="430" cy="250" r="85" fill="rgba(255,107,74,0.14)"/>
+
+          <!-- cinta / listón curvo -->
+          <path d="M65 80 C 145 30, 225 30, 255 80 C 280 122, 335 122, 365 85" stroke="url(#ribbonB)" stroke-width="46" fill="none" stroke-linecap="round"/>
+          <path d="M65 80 C 145 30, 225 30, 255 80 C 280 122, 335 122, 365 85" stroke="url(#ribbonA)" stroke-width="46" fill="none" stroke-linecap="round" opacity="0.25"/>
+
+          <!-- barras (mini gráfico) -->
+          <g transform="translate(91,54)">
+            <rect x="0" y="14" width="8" height="20" rx="2" fill="#5B4FE9"/>
+            <rect x="12" y="6" width="8" height="28" rx="2" fill="#5B4FE9"/>
+            <rect x="24" y="0" width="8" height="34" rx="2" fill="#5B4FE9"/>
+          </g>
+
+          <!-- tarjeta dorada -->
+          <g transform="translate(145,48) rotate(-8)">
+            <rect x="0" y="0" width="74" height="48" rx="9" fill="url(#chipGrad)"/>
+            <rect x="10" y="12" width="18" height="13" rx="3" fill="rgba(255,255,255,0.55)"/>
+            <rect x="10" y="32" width="40" height="5" rx="2.5" fill="rgba(255,255,255,0.55)"/>
+          </g>
+
+          <!-- flecha ascendente + candado -->
+          <g transform="translate(295,30)">
+            <path d="M0 46 L22 24 L38 36 L64 6" stroke="#3DDC97" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M46 6 H64 V22" stroke="#3DDC97" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            <g transform="translate(58,-14)">
+              <rect x="0" y="8" width="20" height="16" rx="4" fill="#FFD873"/>
+              <path d="M4 8 V4 a6 6 0 0 1 12 0 V8" stroke="#FFD873" stroke-width="3.5" fill="none"/>
+            </g>
+          </g>
+
+          <!-- billetes -->
+          <g transform="translate(50,140)">
+            <rect x="10" y="10" width="58" height="34" rx="6" fill="url(#billGrad)" opacity="0.55"/>
+            <rect x="0" y="0" width="58" height="34" rx="6" fill="url(#billGrad)"/>
+            <circle cx="29" cy="17" r="8" fill="rgba(255,255,255,0.55)"/>
+          </g>
+
+          <!-- ábaco -->
+          <g transform="translate(70,190)">
+            <circle cx="0" cy="0" r="24" fill="#ffffff"/>
+            <text x="-13" y="8" font-size="22">🧮</text>
+          </g>
+          <!-- alcancía -->
+          <g transform="translate(105,235)">
+            <circle cx="0" cy="0" r="22" fill="#ffffff"/>
+            <text x="-12" y="7" font-size="20">🐷</text>
+          </g>
+
+          <!-- mini tarjeta "Resumen del mes" -->
+          <g transform="translate(200,150) rotate(-3)">
+            <rect x="0" y="0" width="185" height="86" rx="14" fill="#ffffff"/>
+            <text x="16" y="24" font-family="Inter, sans-serif" font-size="10" letter-spacing="1" fill="#8A8CA8">RESUMEN DEL MES</text>
+            <text x="16" y="46" font-family="Space Grotesk, sans-serif" font-size="19" font-weight="700" fill="#12B76A">$3.000.000</text>
+            <text x="16" y="66" font-family="Inter, sans-serif" font-size="10" letter-spacing="1" fill="#8A8CA8">GASTOS</text>
+            <text x="76" y="66" font-family="Space Grotesk, sans-serif" font-size="13" font-weight="700" fill="#F0654B">$21.750</text>
+          </g>
+          <g transform="translate(365,193)">
+            <circle cx="0" cy="0" r="24" fill="#ffffff"/>
+            <text x="-13" y="8" font-size="22">🎯</text>
+          </g>
+
+          <!-- botón "+" flotante -->
+          <g transform="translate(330,255)">
+            <circle cx="0" cy="0" r="24" fill="url(#ctaCircle)"/>
+            <path d="M-10 0 H10 M0 -10 V10" stroke="#ffffff" stroke-width="5" stroke-linecap="round"/>
+          </g>
+        </svg>
+
+        <h3 class="onboard-title">Tu Futuro Financiero</h3>
+        <p class="onboard-sub">Organiza, ahorra e invierte de forma inteligente.</p>
+        <button class="btn btn-cta" id="btnGoRegister">Crear Cuenta</button>
+        <p class="onboard-login-link">¿Ya tienes cuenta? <a href="javascript:void(0)" id="btnGoLogin">Inicia sesión</a></p>
       </div>
-      <p class="hint" id="syncStatus" style="margin-top:16px;"><span class="sync-status-dot off"></span>No conectado — tus datos solo se guardan en este dispositivo.</p>
     </div>
 
+    <!-- PASO 1a: inicio de sesión -->
+    <div id="syncLoginForm" style="display:none;">
+      <h3 class="form-title">Inicia sesión</h3>
+      <div class="form-grid">
+        <div class="field">
+          <label for="loginEmail">Correo</label>
+          <input type="email" id="loginEmail" placeholder="tucorreo@ejemplo.com">
+        </div>
+        <div class="field">
+          <label for="loginPassword">Contraseña</label>
+          <input type="password" id="loginPassword" placeholder="Tu contraseña">
+        </div>
+      </div>
+      <div style="display:flex; gap:10px; margin-top:16px; flex-wrap:wrap;">
+        <button class="btn" id="btnDoLogin">Ingresar</button>
+        <button class="btn secondary" id="btnBackFromLogin">← Volver</button>
+      </div>
+    </div>
+
+    <!-- PASO 1b: crear cuenta -->
+    <div id="syncRegisterForm" style="display:none;">
+      <h3 class="form-title">Crea tu cuenta</h3>
+      <div class="form-grid">
+        <div class="field" style="grid-column:span 2;">
+          <label for="regName">Nombre de usuario</label>
+          <input type="text" id="regName" placeholder="¿Cómo quieres que te llamemos?">
+        </div>
+        <div class="field" style="grid-column:span 2;">
+          <label for="regEmail">Correo</label>
+          <input type="email" id="regEmail" placeholder="tucorreo@ejemplo.com">
+        </div>
+        <div class="field" style="grid-column:span 2;">
+          <label for="regIdNumber">Número de identificación</label>
+          <input type="text" id="regIdNumber" placeholder="Ej. 1234567890">
+        </div>
+        <div class="field" style="grid-column:span 2;">
+          <label for="regPassword">Contraseña</label>
+          <input type="password" id="regPassword" placeholder="Mínimo 6 caracteres">
+        </div>
+      </div>
+      <div style="display:flex; gap:10px; margin-top:16px; flex-wrap:wrap;">
+        <button class="btn" id="btnDoRegister">Crear cuenta</button>
+        <button class="btn secondary" id="btnBackFromRegister">← Volver</button>
+      </div>
+    </div>
+
+    <p class="hint" id="syncStatus" style="margin-top:18px;"><span class="sync-status-dot off"></span>No conectado — tus datos solo se guardan en este dispositivo.</p>
+
     <div id="syncLoggedBox" style="display:none;">
+      <h3 class="form-title">Sincronización</h3>
       <p class="hint"><span class="sync-status-dot on"></span>Conectado como <strong id="syncUserEmail"></strong>. Tus datos se sincronizan en tiempo real con todos tus dispositivos.</p>
       <div style="display:flex; gap:10px; flex-wrap:wrap;">
         <button class="btn secondary" id="btnEditName">Editar nombre</button>
@@ -667,6 +895,7 @@
 (function(){
   const ICONS = ['💰','🏠','💡','🛒','🍽️','🚌','🎬','💊','📱','🎓','🐾','✈️','🛠️','👕','🎁','📈','☕','🏋️','💳','📚'];
   const COLORS = ['#5B4FE9','#12B76A','#FF6B4A','#F0654B','#0EA5E9','#A855F7','#F59E0B','#14B8A6','#EC4899','#6E7091'];
+  const RED_SHADES = ['#F0654B','#D64545','#FF8A65','#C23616','#FF6B4A','#B0342F','#FF9E80','#8B2C1F'];
 
   const DEFAULT_CATEGORIES = [
     {id:'c1', name:'Salario', type:'ingreso', icon:'💰', color:'#12B76A'},
@@ -785,11 +1014,31 @@
   // ---------- TX TYPE TOGGLE ----------
   document.getElementById('btnIngreso').addEventListener('click', ()=>setTxType('ingreso'));
   document.getElementById('btnGasto').addEventListener('click', ()=>setTxType('gasto'));
+  document.getElementById('btnAhorro').addEventListener('click', ()=>{
+    if(state.goals.length===0) return; // bloqueado hasta crear una meta
+    setTxType('ahorro');
+  });
   function setTxType(t){
     selectedType = t;
     document.getElementById('btnIngreso').classList.toggle('on', t==='ingreso');
     document.getElementById('btnGasto').classList.toggle('on', t==='gasto');
+    document.getElementById('btnAhorro').classList.toggle('on', t==='ahorro');
+    document.getElementById('txCategoryField').style.display = (t==='ahorro') ? 'none' : 'block';
+    document.getElementById('txGoalField').style.display = (t==='ahorro') ? 'block' : 'none';
     populateCategorySelect();
+    populateGoalSelect();
+  }
+
+  // Habilita o deshabilita el botón "Ahorro" según si ya existen metas creadas.
+  function updateAhorroAvailability(){
+    const btn = document.getElementById('btnAhorro');
+    const hint = document.getElementById('txAhorroHint');
+    const disabled = state.goals.length===0;
+    btn.disabled = disabled;
+    btn.style.opacity = disabled ? '0.45' : '1';
+    btn.style.cursor = disabled ? 'not-allowed' : 'pointer';
+    hint.style.display = disabled ? 'block' : 'none';
+    if(disabled && selectedType==='ahorro') setTxType('ingreso');
   }
 
   document.getElementById('catBtnIngreso').addEventListener('click', ()=>setCatType('ingreso'));
@@ -854,7 +1103,7 @@
     state.categories.forEach(cat=>{
       const card = document.createElement('div');
       card.className = 'cat-card';
-      const naturaleza = cat.type==='gasto' ? (cat.fixed ? 'Gasto fijo' : 'Gasto variable') : 'Ingreso';
+      const naturaleza = cat.type==='gasto' ? (cat.fixed ? 'Gasto fijo' : 'Gasto variable') : (cat.type==='ahorro' ? 'Ahorro' : 'Ingreso');
       card.innerHTML = `
         <div class="icon" style="background:${cat.color}22; color:${cat.color};">${cat.icon}</div>
         <div class="info">
@@ -884,17 +1133,36 @@
     });
   }
 
+  function populateGoalSelect(){
+    const sel = document.getElementById('txGoal');
+    sel.innerHTML = '';
+    state.goals.forEach(g=>{
+      const opt = document.createElement('option');
+      opt.value = g.id;
+      opt.textContent = `${g.icon} ${g.name}`;
+      sel.appendChild(opt);
+    });
+  }
+
   // ---------- ADD TRANSACTION ----------
   document.getElementById('txDate').valueAsDate = new Date();
   document.getElementById('btnAddTx').addEventListener('click', async ()=>{
     const amount = parseFloat(document.getElementById('txAmount').value);
     const date = document.getElementById('txDate').value;
-    const categoryId = document.getElementById('txCategory').value;
     const note = document.getElementById('txNote').value.trim();
     if(!amount || amount<=0){ document.getElementById('txAmount').focus(); return; }
     if(!date){ document.getElementById('txDate').focus(); return; }
-    if(!categoryId){ return; }
-    const tx = { id: uid(), type: selectedType, amount, date, categoryId, note };
+
+    let tx;
+    if(selectedType==='ahorro'){
+      const goalId = document.getElementById('txGoal').value;
+      if(!goalId){ return; }
+      tx = { id: uid(), type: 'ahorro', amount, date, goalId, note };
+    } else {
+      const categoryId = document.getElementById('txCategory').value;
+      if(!categoryId){ return; }
+      tx = { id: uid(), type: selectedType, amount, date, categoryId, note };
+    }
     state.transactions.push(tx);
     document.getElementById('txAmount').value = '';
     document.getElementById('txNote').value = '';
@@ -911,13 +1179,17 @@
       return;
     }
     sorted.forEach(tx=>{
-      const cat = state.categories.find(c=>c.id===tx.categoryId) || {name:'Sin categoría', color:'#999', icon:'❔'};
+      const cat = tx.type==='ahorro'
+        ? (state.goals.find(g=>g.id===tx.goalId) || {name:'Meta eliminada', color:'#999', icon:'❔'})
+        : (state.categories.find(c=>c.id===tx.categoryId) || {name:'Sin categoría', color:'#999', icon:'❔'});
       const tr = document.createElement('tr');
+      const amtClass = tx.type==='gasto' ? 'neg' : (tx.type==='ahorro' ? 'save' : 'pos');
+      const amtSign = tx.type==='gasto' ? '−' : '+';
       tr.innerHTML = `
         <td>${formatDate(tx.date)}</td>
         <td>${escapeHtml(tx.note || '—')}</td>
         <td><span class="tag" style="background:${cat.color}22; color:${cat.color};"><span class="dot" style="background:${cat.color};"></span>${cat.icon} ${escapeHtml(cat.name)}</span></td>
-        <td class="amt ${tx.type==='ingreso'?'pos':'neg'}">${tx.type==='ingreso'?'+':'−'} ${fmt(tx.amount)}</td>
+        <td class="amt ${amtClass}">${amtSign} ${fmt(tx.amount)}</td>
         <td><button class="btn danger" data-id="${tx.id}">✕</button></td>
       `;
       tr.querySelector('button.danger').addEventListener('click', async ()=>{
@@ -942,13 +1214,14 @@
 
   // ---------- BALANCE ----------
   function renderBalance(){
-    const total = state.transactions.reduce((acc,t)=> acc + (t.type==='ingreso'? t.amount : -t.amount), 0);
+    // Ingresos y ahorros suman al saldo; los gastos restan.
+    const total = state.transactions.reduce((acc,t)=> acc + (t.type==='gasto' ? -t.amount : t.amount), 0);
     document.getElementById('balanceAmt').textContent = fmt(total);
     document.getElementById('balanceStamp').classList.toggle('neg', total<0);
   }
 
   // ---------- REPORTS ----------
-  let pieChartInstance, barChartInstance;
+  let pieChartInstance, incomePieChartInstance;
   const monthPicker = document.getElementById('monthPicker');
   monthPicker.addEventListener('change', renderReports);
 
@@ -966,9 +1239,11 @@
 
     const ingresoTotal = monthTx.filter(t=>t.type==='ingreso').reduce((a,t)=>a+t.amount,0);
     const gastoTotal = monthTx.filter(t=>t.type==='gasto').reduce((a,t)=>a+t.amount,0);
+    const ahorroTotal = monthTx.filter(t=>t.type==='ahorro').reduce((a,t)=>a+t.amount,0);
     document.getElementById('kpiIngreso').textContent = fmt(ingresoTotal);
     document.getElementById('kpiGasto').textContent = fmt(gastoTotal);
-    const balMonth = ingresoTotal - gastoTotal;
+    document.getElementById('kpiAhorro').textContent = fmt(ahorroTotal);
+    const balMonth = ingresoTotal + ahorroTotal - gastoTotal;
     const kpiBal = document.getElementById('kpiBalance');
     kpiBal.textContent = fmt(balMonth);
     kpiBal.style.color = balMonth<0 ? 'var(--rust)' : 'var(--forest)';
@@ -994,10 +1269,7 @@
       return c ? `${c.icon} ${c.name}` : 'Otro';
     });
     const dataVals = catIds.map(id=>byCat[id]);
-    const colors = catIds.map(id=>{
-      const c = state.categories.find(c=>c.id===id);
-      return c ? c.color : '#999';
-    });
+    const colors = catIds.map((id,i)=> RED_SHADES[i % RED_SHADES.length]);
 
     const pieCtx = document.getElementById('pieChart').getContext('2d');
     if(pieChartInstance){ try{ pieChartInstance.destroy(); }catch(e){} pieChartInstance = null; }
@@ -1023,40 +1295,50 @@
           const pct = gastoTotal>0 ? Math.round(dataVals[i]/gastoTotal*100) : 0;
           return `<div class="legend-item"><span class="l"><span class="dot" style="background:${colors[i]}"></span>${labels[i]}</span><span>${fmt(dataVals[i])} · ${pct}%</span></div>`;
         }).join('');
+    document.querySelector('#pieCenter .dc-val').textContent = fmt(gastoTotal);
 
-    // Bar: desde el mes de la primera transacción hasta el mes actual
-    const months = monthsSinceFirstTransaction();
-    const mesesLabels = months.map(m=>{
-      const [y,mo] = m.split('-');
-      const nombres = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
-      return `${nombres[parseInt(mo,10)-1]} ${y.slice(2)}`;
+    // Donut: ingresos por categoría (mismo mes seleccionado)
+    const ingresoTx = monthTx.filter(t=>t.type==='ingreso');
+    const byCatIng = {};
+    ingresoTx.forEach(t=>{
+      byCatIng[t.categoryId] = (byCatIng[t.categoryId]||0) + t.amount;
     });
-    const ingresoSeries = months.map(m => state.transactions.filter(t=>t.type==='ingreso' && t.date.startsWith(m)).reduce((a,t)=>a+t.amount,0));
-    const gastoSeries = months.map(m => state.transactions.filter(t=>t.type==='gasto' && t.date.startsWith(m)).reduce((a,t)=>a+t.amount,0));
+    const catIdsIng = Object.keys(byCatIng);
+    const labelsIng = catIdsIng.map(id => {
+      const c = state.categories.find(c=>c.id===id);
+      return c ? `${c.icon} ${c.name}` : 'Otro';
+    });
+    const dataValsIng = catIdsIng.map(id=>byCatIng[id]);
+    const colorsIng = catIdsIng.map(id=>{
+      const c = state.categories.find(c=>c.id===id);
+      return c ? c.color : '#999';
+    });
 
-    const barCtx = document.getElementById('barChart').getContext('2d');
-    if(barChartInstance){ try{ barChartInstance.destroy(); }catch(e){} barChartInstance = null; }
-    if(chartsAvailable()){
+    const incomePieCtx = document.getElementById('incomePieChart').getContext('2d');
+    if(incomePieChartInstance){ try{ incomePieChartInstance.destroy(); }catch(e){} incomePieChartInstance = null; }
+    if(dataValsIng.length===0){
+      incomePieCtx.clearRect(0,0,incomePieCtx.canvas.width, incomePieCtx.canvas.height);
+    } else if(chartsAvailable()){
       try{
-        barChartInstance = new Chart(barCtx, {
-          type:'bar',
-          data:{
-            labels: mesesLabels,
-            datasets:[
-              { label:'Ingresos', data: ingresoSeries, backgroundColor:'#12B76A', borderRadius:8, borderSkipped:false, maxBarThickness:26 },
-              { label:'Gastos', data: gastoSeries, backgroundColor:'#F0654B', borderRadius:8, borderSkipped:false, maxBarThickness:26 },
-            ]
-          },
+        incomePieChartInstance = new Chart(incomePieCtx, {
+          type:'doughnut',
+          data:{ labels:labelsIng, datasets:[{ data:dataValsIng, backgroundColor:colorsIng, borderColor:'#FFFFFF', borderWidth:3, borderRadius:6, spacing:3, hoverOffset:10 }]},
           options:{
-            plugins:{ legend:{ position:'bottom', labels:{ boxWidth:8, boxHeight:8, usePointStyle:true, pointStyle:'circle', padding:16, font:{size:11.5, family:"'Inter', sans-serif", weight:'600'} } } },
-            scales:{
-              x:{ grid:{ display:false }, border:{ display:false } },
-              y:{ grid:{ color:'#EEF0FA' }, border:{ display:false }, ticks:{ callback:(v)=> new Intl.NumberFormat('es-CO',{notation:'compact'}).format(v) } }
-            }
+            plugins:{ legend:{ display:false } },
+            cutout:'70%',
+            animation:{ animateRotate:true, duration:600, easing:'easeOutQuart' }
           }
         });
-      }catch(e){ console.error('Error creando gráfico de barras', e); }
+      }catch(e){ console.error('Error creando gráfico de ingresos', e); }
     }
+    const legendIng = document.getElementById('incomePieLegend');
+    legendIng.innerHTML = dataValsIng.length===0
+      ? '<div style="color:var(--ink-soft); font-size:12.5px;">Sin ingresos registrados este mes.</div>'
+      : catIdsIng.map((id,i)=>{
+          const pct = ingresoTotal>0 ? Math.round(dataValsIng[i]/ingresoTotal*100) : 0;
+          return `<div class="legend-item"><span class="l"><span class="dot" style="background:${colorsIng[i]}"></span>${labelsIng[i]}</span><span>${fmt(dataValsIng[i])} · ${pct}%</span></div>`;
+        }).join('');
+    document.querySelector('#incomePieCenter .dc-val').textContent = fmt(ingresoTotal);
   }
 
   // ---------- EXPORT CSV / EXCEL ----------
@@ -1064,12 +1346,13 @@
     const rows = [['Fecha','Tipo','Categoría','Naturaleza','Nota','Monto']];
     const sorted = [...state.transactions].sort((a,b)=> a.date.localeCompare(b.date));
     sorted.forEach(tx=>{
-      const cat = state.categories.find(c=>c.id===tx.categoryId);
-      const nat = cat ? (cat.type==='gasto' ? (cat.fixed?'Fijo':'Variable') : '—') : '—';
+      const isAhorro = tx.type==='ahorro';
+      const cat = isAhorro ? state.goals.find(g=>g.id===tx.goalId) : state.categories.find(c=>c.id===tx.categoryId);
+      const nat = (!isAhorro && cat) ? (cat.type==='gasto' ? (cat.fixed?'Fijo':'Variable') : '—') : '—';
       rows.push([
         tx.date,
-        tx.type==='ingreso' ? 'Ingreso' : 'Gasto',
-        cat ? cat.name : 'Sin categoría',
+        tx.type==='ingreso' ? 'Ingreso' : (isAhorro ? 'Ahorro' : 'Gasto'),
+        cat ? cat.name : (isAhorro ? 'Meta eliminada' : 'Sin categoría'),
         nat,
         (tx.note||'').replace(/"/g,'""'),
         tx.amount
@@ -1150,22 +1433,32 @@
     if(!target || target<=0){ document.getElementById('goalTarget').focus(); return; }
     const icon = ICONS[Math.floor(Math.random()*ICONS.length)];
     const color = COLORS[state.goals.length % COLORS.length];
-    state.goals.push({ id:'g'+Date.now(), name, target, saved:0, icon, color });
+    state.goals.push({ id:'g'+Date.now(), name, target, icon, color });
     document.getElementById('goalName').value = '';
     document.getElementById('goalTarget').value = '';
     await saveData();
     renderGoals();
+    updateAhorroAvailability();
   });
+
+  // El ahorro de cada meta se calcula sumando todas las transacciones de tipo
+  // "ahorro" vinculadas a ella — ya no se edita manualmente.
+  function savedForGoal(goalId){
+    return state.transactions
+      .filter(t=>t.type==='ahorro' && t.goalId===goalId)
+      .reduce((a,t)=>a+t.amount,0);
+  }
 
   function renderGoals(){
     const grid = document.getElementById('goalGrid');
     grid.innerHTML = '';
     if(state.goals.length===0){
-      grid.innerHTML = '<p class="hint">Aún no tienes metas. Crea la primera arriba.</p>';
+      grid.innerHTML = '<p class="hint">Aún no tienes metas. Crea la primera arriba — en cuanto la crees, la opción "Ahorro" se activará en Transacciones.</p>';
       return;
     }
     state.goals.forEach(goal=>{
-      const pct = Math.min(100, Math.round(goal.saved/goal.target*100));
+      const saved = savedForGoal(goal.id);
+      const pct = Math.min(100, Math.round(saved/goal.target*100));
       const card = document.createElement('div');
       card.className = 'goal-card';
       card.innerHTML = `
@@ -1175,38 +1468,24 @@
           <div class="gname">${escapeHtml(goal.name)}</div>
         </div>
         <div class="bar-track"><div class="bar-fill" style="width:${pct}%; background:${goal.color};"></div></div>
-        <div class="gnums"><span>${fmt(goal.saved)}</span><span>${pct}% de ${fmt(goal.target)}</span></div>
-        <div class="gactions">
-          <button class="btn secondary" data-act="add">+ Aporte</button>
-          <button class="btn secondary" data-act="reset">Reiniciar</button>
-        </div>
+        <div class="gnums"><span>${fmt(saved)}</span><span>${pct}% de ${fmt(goal.target)}</span></div>
       `;
       card.querySelector('.gremove').addEventListener('click', async ()=>{
+        if(!confirm(`¿Eliminar la meta "${goal.name}"? Las transacciones de ahorro ya registradas para ella no se borran, pero quedarán sin meta asociada.`)) return;
         state.goals = state.goals.filter(g=>g.id!==goal.id);
         await saveData();
         renderGoals();
-      });
-      card.querySelector('[data-act="add"]').addEventListener('click', async ()=>{
-        const val = parseFloat(prompt(`¿Cuánto quieres aportar a "${goal.name}"?`, ''));
-        if(!val || val<=0) return;
-        goal.saved += val;
-        await saveData();
-        renderGoals();
-      });
-      card.querySelector('[data-act="reset"]').addEventListener('click', async ()=>{
-        if(!confirm(`¿Reiniciar el ahorro de "${goal.name}" a $0?`)) return;
-        goal.saved = 0;
-        await saveData();
-        renderGoals();
+        updateAhorroAvailability();
       });
       grid.appendChild(card);
     });
   }
 
   // ---------- ANÁLISIS ----------
-  let trendChartInstance, topGastoChartInstance, topIngresoChartInstance;
+  let trendChartInstance, topGastoChartInstance, topIngresoChartInstance, topAhorroChartInstance;
   const analisisRango = document.getElementById('analisisRango');
   analisisRango.addEventListener('change', renderAnalisis);
+  document.getElementById('analisisVista').addEventListener('change', renderAnalisis);
 
   function monthsBack(n){
     const now = new Date();
@@ -1254,22 +1533,108 @@
     return months.filter(m => m >= firstMonthKey);
   }
 
-  function renderAnalisis(){
-    const rango = analisisRango.value;
-    let months;
-    if(rango==='all'){
-      months = monthsSinceFirstTransaction();
-    } else {
-      months = clipToFirstTransaction(monthsBack(parseInt(rango,10)));
-    }
+  function firstTransactionDateStr(){
+    if(state.transactions.length===0) return null;
+    return state.transactions.reduce((min,t)=> t.date < min ? t.date : min, state.transactions[0].date);
+  }
 
-    const nombres = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
-    const mesLabels = months.map(m=>{
-      const [y,mo] = m.split('-');
-      return `${nombres[parseInt(mo,10)-1]} ${y.slice(2)}`;
-    });
-    const ingresoSeries = months.map(m => state.transactions.filter(t=>t.type==='ingreso' && t.date.startsWith(m)).reduce((a,t)=>a+t.amount,0));
-    const gastoSeries = months.map(m => state.transactions.filter(t=>t.type==='gasto' && t.date.startsWith(m)).reduce((a,t)=>a+t.amount,0));
+  function toDateKey(d){
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  }
+
+  // Últimos n días (terminando hoy), recortados para no empezar antes de la primera transacción.
+  function dayKeysBack(n){
+    const now = new Date();
+    let keys = [];
+    for(let i=n-1;i>=0;i--){
+      const d = new Date(now.getFullYear(), now.getMonth(), now.getDate()-i);
+      keys.push(toDateKey(d));
+    }
+    const first = firstTransactionDateStr();
+    if(first) keys = keys.filter(k => k >= first);
+    return keys.length ? keys : [toDateKey(now)];
+  }
+
+  // Lunes de la semana que contiene la fecha dada.
+  function weekStartOf(dateStr){
+    const d = new Date(dateStr + 'T00:00:00');
+    const day = d.getDay();
+    const diff = (day===0 ? -6 : 1-day);
+    d.setDate(d.getDate()+diff);
+    return toDateKey(d);
+  }
+
+  // Últimas n semanas (lunes a domingo, terminando en la semana actual),
+  // recortadas para no empezar antes de la semana de la primera transacción.
+  function weekKeysBack(n){
+    const now = new Date();
+    const currentWeekStart = weekStartOf(toDateKey(now));
+    let keys = [];
+    for(let i=n-1;i>=0;i--){
+      const d = new Date(currentWeekStart + 'T00:00:00');
+      d.setDate(d.getDate() - (i*7));
+      keys.push(toDateKey(d));
+    }
+    const first = firstTransactionDateStr();
+    if(first){
+      const firstWeek = weekStartOf(first);
+      keys = keys.filter(k => k >= firstWeek);
+    }
+    return keys.length ? keys : [currentWeekStart];
+  }
+
+  function formatDayLabel(key){
+    const [y,m,d] = key.split('-');
+    const meses = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+    return `${parseInt(d,10)} ${meses[parseInt(m,10)-1]}`;
+  }
+
+  function formatWeekLabel(key){
+    const start = new Date(key + 'T00:00:00');
+    const end = new Date(start); end.setDate(end.getDate()+6);
+    const meses = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+    return `${start.getDate()} - ${end.getDate()} ${meses[end.getMonth()]}`;
+  }
+
+  function sumByType(txs, type){
+    return txs.filter(t=>t.type===type).reduce((a,t)=>a+t.amount,0);
+  }
+
+  function bucketKeyFor(vista, dateStr){
+    if(vista==='day') return dateStr;
+    if(vista==='week') return weekStartOf(dateStr);
+    return dateStr.slice(0,7);
+  }
+
+  function renderAnalisis(){
+    const vista = document.getElementById('analisisVista').value;
+    document.getElementById('analisisRangoField').style.display = (vista==='month') ? 'block' : 'none';
+
+    let periodKeys, periodLabels, chartTitle;
+
+    if(vista==='day'){
+      periodKeys = dayKeysBack(30);
+      periodLabels = periodKeys.map(formatDayLabel);
+      chartTitle = 'Tendencia diaria — ingresos vs gastos (últimos 30 días)';
+    } else if(vista==='week'){
+      periodKeys = weekKeysBack(12);
+      periodLabels = periodKeys.map(formatWeekLabel);
+      chartTitle = 'Tendencia semanal — ingresos vs gastos (últimas 12 semanas)';
+    } else {
+      const rango = analisisRango.value;
+      periodKeys = (rango==='all') ? monthsSinceFirstTransaction() : clipToFirstTransaction(monthsBack(parseInt(rango,10)));
+      const nombres = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+      periodLabels = periodKeys.map(m=>{
+        const [y,mo] = m.split('-');
+        return `${nombres[parseInt(mo,10)-1]} ${y.slice(2)}`;
+      });
+      chartTitle = 'Tendencia mensual — ingresos vs gastos';
+    }
+    document.getElementById('trendChartTitle').textContent = chartTitle;
+
+    const ingresoSeries = periodKeys.map(k => sumByType(state.transactions.filter(t=>bucketKeyFor(vista,t.date)===k), 'ingreso'));
+    const gastoSeries = periodKeys.map(k => sumByType(state.transactions.filter(t=>bucketKeyFor(vista,t.date)===k), 'gasto'));
+    const ahorroSeries = periodKeys.map(k => sumByType(state.transactions.filter(t=>bucketKeyFor(vista,t.date)===k), 'ahorro'));
 
     const trendCtx = document.getElementById('trendChart').getContext('2d');
     if(trendChartInstance){ try{ trendChartInstance.destroy(); }catch(e){} trendChartInstance = null; }
@@ -1278,10 +1643,11 @@
         trendChartInstance = new Chart(trendCtx, {
           type:'line',
           data:{
-            labels: mesLabels,
+            labels: periodLabels,
             datasets:[
               { label:'Ingresos', data: ingresoSeries, borderColor:'#12B76A', backgroundColor:'#12B76A1A', fill:true, tension:.35, borderWidth:3, pointRadius:4, pointHoverRadius:6, pointBackgroundColor:'#fff', pointBorderColor:'#12B76A', pointBorderWidth:2 },
               { label:'Gastos', data: gastoSeries, borderColor:'#F0654B', backgroundColor:'#F0654B1A', fill:true, tension:.35, borderWidth:3, pointRadius:4, pointHoverRadius:6, pointBackgroundColor:'#fff', pointBorderColor:'#F0654B', pointBorderWidth:2 },
+              { label:'Ahorros', data: ahorroSeries, borderColor:'#0EA5E9', backgroundColor:'#0EA5E91A', fill:true, tension:.35, borderWidth:3, pointRadius:4, pointHoverRadius:6, pointBackgroundColor:'#fff', pointBorderColor:'#0EA5E9', pointBorderWidth:2 },
             ]
           },
           options:{
@@ -1296,22 +1662,24 @@
     }
 
     // Top categorías por tipo, dentro del rango seleccionado
-    const inRange = state.transactions.filter(t => months.includes(t.date.slice(0,7)));
+    const inRange = state.transactions.filter(t => periodKeys.includes(bucketKeyFor(vista, t.date)));
 
-    function topCategoriesFor(type, chartId){
+    function topCategoriesFor(type){
       const totals = {};
+      const key = (type==='ahorro') ? 'goalId' : 'categoryId';
       inRange.filter(t=>t.type===type).forEach(t=>{
-        totals[t.categoryId] = (totals[t.categoryId]||0) + t.amount;
+        totals[t[key]] = (totals[t[key]]||0) + t.amount;
       });
       const entries = Object.entries(totals).sort((a,b)=>b[1]-a[1]).slice(0,8);
+      const lookup = (id) => type==='ahorro' ? state.goals.find(g=>g.id===id) : state.categories.find(c=>c.id===id);
       const labels = entries.map(([id])=>{
-        const c = state.categories.find(c=>c.id===id);
-        return c ? `${c.icon} ${c.name}` : 'Sin categoría';
+        const item = lookup(id);
+        return item ? `${item.icon} ${item.name}` : 'Sin categoría';
       });
       const values = entries.map(([,v])=>v);
       const colors = entries.map(([id])=>{
-        const c = state.categories.find(c=>c.id===id);
-        return c ? c.color : '#999';
+        const item = lookup(id);
+        return item ? item.color : '#999';
       });
       return { labels, values, colors };
     }
@@ -1355,6 +1723,26 @@
         });
       }catch(e){ console.error('Error creando gráfico top ingresos', e); }
     }
+
+    const ahorroTop = topCategoriesFor('ahorro');
+    const ahorroCtx = document.getElementById('topAhorroChart').getContext('2d');
+    if(topAhorroChartInstance){ try{ topAhorroChartInstance.destroy(); }catch(e){} topAhorroChartInstance = null; }
+    if(chartsAvailable()){
+      try{
+        topAhorroChartInstance = new Chart(ahorroCtx, {
+          type:'bar',
+          data:{ labels: ahorroTop.labels, datasets:[{ data: ahorroTop.values, backgroundColor: ahorroTop.colors, borderRadius:8, borderSkipped:false, maxBarThickness:22 }]},
+          options:{
+            indexAxis:'y',
+            plugins:{ legend:{ display:false } },
+            scales:{
+              x:{ grid:{ color:'#EEF0FA' }, border:{ display:false }, ticks:{ callback:(v)=> new Intl.NumberFormat('es-CO',{notation:'compact'}).format(v) } },
+              y:{ grid:{ display:false }, border:{ display:false } }
+            }
+          }
+        });
+      }catch(e){ console.error('Error creando gráfico top ahorros', e); }
+    }
   }
 
   function renderAll(){
@@ -1365,6 +1753,8 @@
     renderAnalisis();
     renderBudgets();
     renderGoals();
+    updateAhorroAvailability();
+    populateGoalSelect();
   }
 
   // ---------- SUPABASE SYNC ----------
@@ -1501,44 +1891,84 @@
   const DEFAULT_HERO_SUB = 'Tus ingresos y gastos, en un solo lugar — claro, al instante y en todos tus dispositivos.';
 
   function updateSyncUI(){
-    const authBox = document.getElementById('syncAuthBox');
     const loggedBox = document.getElementById('syncLoggedBox');
     const heroSub = document.querySelector('.hero-sub');
     if(sbUser){
-      authBox.style.display = 'none';
+      showSyncView('none');
       loggedBox.style.display = 'block';
       const name = getDisplayName(sbUser);
       document.getElementById('syncUserEmail').textContent = name ? `${name} (${sbUser.email})` : sbUser.email;
       if(heroSub) heroSub.textContent = `${getGreeting()}, ${name} — así va tu dinero hoy.`;
     } else {
-      authBox.style.display = 'block';
       loggedBox.style.display = 'none';
+      showSyncView('choice');
       if(heroSub) heroSub.textContent = DEFAULT_HERO_SUB;
     }
   }
 
-  document.getElementById('btnSyncRegister').addEventListener('click', async ()=>{
-    if(!sbConfigured()) return;
-    const name = document.getElementById('syncName').value.trim();
-    const email = document.getElementById('syncEmail').value.trim();
-    const pass = document.getElementById('syncPassword').value;
-    const statusEl = document.getElementById('syncStatus');
-    if(!email || pass.length<6){ statusEl.textContent = 'Escribe un correo y una contraseña de al menos 6 caracteres.'; return; }
-    const { error } = await sb.auth.signUp({
-      email,
-      password: pass,
-      options: { data: { full_name: name || null } }
-    });
-    statusEl.textContent = error ? ('Error: ' + error.message) : 'Cuenta creada. Si tu proyecto pide confirmación por correo, revisa tu bandeja antes de iniciar sesión.';
-  });
+  // ---------- FLUJO: elegir / iniciar sesión / crear cuenta ----------
+  function showSyncView(view){
+    const choice = document.getElementById('syncChoice');
+    const loginForm = document.getElementById('syncLoginForm');
+    const registerForm = document.getElementById('syncRegisterForm');
+    choice.style.display = (view==='choice') ? 'block' : 'none';
+    loginForm.style.display = (view==='login') ? 'block' : 'none';
+    registerForm.style.display = (view==='register') ? 'block' : 'none';
+    document.getElementById('syncStatus').innerHTML = '<span class="sync-status-dot off"></span>No conectado — tus datos solo se guardan en este dispositivo.';
+  }
 
-  document.getElementById('btnSyncLogin').addEventListener('click', async ()=>{
+  document.getElementById('btnGoLogin').addEventListener('click', ()=>showSyncView('login'));
+  document.getElementById('btnGoRegister').addEventListener('click', ()=>showSyncView('register'));
+  document.getElementById('btnBackFromLogin').addEventListener('click', ()=>showSyncView('choice'));
+  document.getElementById('btnBackFromRegister').addEventListener('click', ()=>showSyncView('choice'));
+
+  document.getElementById('btnDoLogin').addEventListener('click', async ()=>{
     if(!sbConfigured()) return;
-    const email = document.getElementById('syncEmail').value.trim();
-    const pass = document.getElementById('syncPassword').value;
+    const email = document.getElementById('loginEmail').value.trim();
+    const pass = document.getElementById('loginPassword').value;
     const statusEl = document.getElementById('syncStatus');
+    if(!email || !pass){ statusEl.textContent = 'Escribe tu correo y tu contraseña.'; return; }
     const { error } = await sb.auth.signInWithPassword({ email, password: pass });
     statusEl.textContent = error ? ('Error: ' + error.message) : 'Conectado. Sincronizando...';
+  });
+
+  document.getElementById('btnDoRegister').addEventListener('click', async ()=>{
+    if(!sbConfigured()) return;
+    const name = document.getElementById('regName').value.trim();
+    const email = document.getElementById('regEmail').value.trim();
+    const idNumber = document.getElementById('regIdNumber').value.trim();
+    const pass = document.getElementById('regPassword').value;
+    const statusEl = document.getElementById('syncStatus');
+    if(!name || !email || !idNumber || pass.length<6){
+      statusEl.textContent = 'Completa nombre, correo, número de identificación y una contraseña de al menos 6 caracteres.';
+      return;
+    }
+    const { data, error } = await sb.auth.signUp({
+      email,
+      password: pass,
+      options: { data: { full_name: name, id_number: idNumber } }
+    });
+
+    if(error){
+      if(/already registered|already exists|already been registered/i.test(error.message)){
+        statusEl.textContent = 'Ese usuario ya está creado. Inicia sesión desde la pantalla anterior.';
+        showSyncView('choice');
+      } else {
+        statusEl.textContent = 'Error: ' + error.message;
+      }
+      return;
+    }
+
+    // Supabase devuelve un usuario con 'identities' vacío cuando el correo ya existía
+    // (por seguridad no lo reporta como error directo si la confirmación por correo está activa).
+    if(data && data.user && Array.isArray(data.user.identities) && data.user.identities.length===0){
+      statusEl.textContent = 'Ese usuario ya está creado. Inicia sesión desde la pantalla anterior.';
+      showSyncView('choice');
+      return;
+    }
+
+    statusEl.textContent = 'Cuenta creada. Si tu proyecto pide confirmación por correo, revisa tu bandeja antes de iniciar sesión.';
+    showSyncView('choice');
   });
 
   document.getElementById('btnSyncLogout').addEventListener('click', async ()=>{
